@@ -1,0 +1,27 @@
+doctype
+html
+  head
+    title #{title}
+    link(rel='stylesheet', href='http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css')
+    script( type="text/javascript", src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js" )
+    script( type="text/javascript", src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js" )
+
+    link(rel='stylesheet', href='/stylesheets/chatter.css')
+  body
+    .container
+
+      include /public/fragments/menu-bar.html
+
+      .jumbotron
+        block jumbotron
+      
+      .row
+        .col-sm-8
+          #messages
+            block left
+        .col-sm-4
+          #room-select
+            block room-select
+
+          #message-window
+            block message-window
