@@ -20,7 +20,21 @@ html
           #messages
             block left
         .col-sm-4
-          #room-select
+
+          #nickname
+
+            input.form-control#nickname(placeholder="Nickname")
+        
+          br
+
+          #message-window
+      
+            textarea#form-control(rows="3")
+
+          br
+
+          #room-select(placeholder="Blah")
+
             block room-select
 
             .list-group
@@ -30,6 +44,3 @@ html
                 span.badge 6
               a(href="#", class="list-group-item") Private 
                 span.badge 2
-
-          #message-window
-            block message-window
