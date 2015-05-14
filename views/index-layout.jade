@@ -8,13 +8,11 @@ html
 
     link(rel='stylesheet', href='/stylesheets/chatter.css')
   body
+
+    include /public/fragments/menu-bar.html
+
     .container
 
-      include /public/fragments/menu-bar.html
-
-      .jumbotron
-        block jumbotron
-      
       .row
         .col-sm-8
           #messages
