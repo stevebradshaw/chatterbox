@@ -22,21 +22,19 @@ html
         .col-sm-4
 
           #nickname
-
-            input.form-control#nickname(placeholder="Nickname")
+            label(for="nickname") Nickname
+            input#nickname.form-control(placeholder="Nickname")
         
           br
 
           #message-window
-      
-            textarea#form-control(rows="3")
+            label(for="message") Message
+            textarea#message.form-control(rows="3", placeholder="Message")
 
           br
 
-          #room-select(placeholder="Blah")
-
-            block room-select
-
+          #room-select
+            label Room Selector
             .list-group
               a(href="#", class="list-group-item") Lobby
                 span.badge 27
