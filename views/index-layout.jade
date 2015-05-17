@@ -3,10 +3,13 @@ html
   head
     title #{title}
     link(rel='stylesheet', href='http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css')
+    link(rel='stylesheet', href='/stylesheets/chatter.css')
+
     script( type="text/javascript", src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js" )
     script( type="text/javascript", src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js" )
 
-    link(rel='stylesheet', href='/stylesheets/chatter.css')
+
+    script( type="text/javascript", src="js/chatterbox.js" )
   body
 
     include /public/fragments/menu-bar.html
@@ -14,10 +17,8 @@ html
     .container
 
       .row
-        .col-sm-8
-          #messages
-            block left
-        .col-sm-4
+
+        .col-sm-3
 
           #nickname
             label(for="nickname") Nickname
@@ -40,3 +41,19 @@ html
                 span.badge 6
               a(href="#", class="list-group-item") Private 
                 span.badge 2
+
+            br
+
+            button#btn-new-room.btn.btn-success New Room
+
+        .col-sm-7
+          #messages
+            block left
+
+        .col-sm-2
+          label Occupants
+
+          .list-group#room-occupants
+            a(href="#", class="list-group-item") Tom
+            a(href="#", class="list-group-item") Dick
+            a(href="#", class="list-group-item") Harry 
