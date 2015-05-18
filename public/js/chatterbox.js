@@ -10,7 +10,7 @@ function populateRoomList() {
               a(href="#", class="list-group-item") Private 
                 span.badge 2
 */
-	$("#room-select-group").append('<span id="select-room" class="list-group-item">Bar<span class="badge">13</span></span>') ;
+	$("#room-select-group").append('<a id="select-room" class="list-group-item">Bar<span class="badge">13</span></a>') ;
 	$("#room-select-group").append('<a id="select-room" href="#" class="list-group-item">Lobby<span class="badge">27</span></a>') ;
 	$("#room-select-group").append('<a id="select-room" href="#" class="list-group-item">Snug<span class="badge">4</span></a>') ;
 }
