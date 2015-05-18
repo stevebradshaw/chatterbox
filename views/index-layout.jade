@@ -34,13 +34,8 @@ html
 
           #room-select
             label Room Selector
-            .list-group
-              a(href="#", class="list-group-item") Lobby
-                span.badge 27
-              a(href="#", class="list-group-item active") Snug
-                span.badge 6
-              a(href="#", class="list-group-item") Private 
-                span.badge 2
+            #room-select-group.list-group
+
 
             br
 
@@ -54,6 +49,5 @@ html
           label Occupants
 
           .list-group#room-occupants
-            a(href="#", class="list-group-item") Tom
-            a(href="#", class="list-group-item") Dick
-            a(href="#", class="list-group-item") Harry 
+            br
+            center Choose a room and its occupants will appear here
