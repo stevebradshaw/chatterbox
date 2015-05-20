@@ -4,8 +4,15 @@ var express = require('express')
   , stylus = require('stylus')
   , nib = require('nib')
   , logger = require('morgan') ;
+//  , http = require('http') ;
 
 var app = express() ;
+
+//var server = http.createServer(app) ;
+ var http = require('http').Server(app);
+ var io = require('socket.io')(http);
+
+//var io = require('socket.io').listen(server) ;
 
 app.locals.basedir = __dirname ;
 
@@ -34,6 +41,29 @@ app.get('/', function (req,res) {
      )
   }) ;
 
-app.listen(appinfo.port, function () {
-  console.log('Listening on port ' + appinfo.port) ;
-})
+io.sockets.on('connection', function (socket) {
+console.log(socket) ;
+  socket.on('subscribe', function(data) { socket.join(data.room); })
+
+  socket.on('unsubscribe', function(data) { socket.leave(data.room); })
+
+  socket.on('chat message', function(msg){
+    console.log(msg) ;
+    io.sockets.in(msg.room).emit('chat message', {msg: msg.msg}) ;
+  }) ;
+}) ;
+
+//app.listen(appinfo.port, function () {
+//  console.log('Listening on port ' + appinfo.port) ;
+//})
+
+http.listen(appinfo.port, function(){
+  console.log('listening on *:3000');
+}) ;
+
+//io.on('connection', function (socket) {
+//      socket.emit('news', { hello: 'world' });
+//        socket.on('my other event', function (data) {
+//                console.log(data);
+//                  });
+//});
