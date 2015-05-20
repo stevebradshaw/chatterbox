@@ -51,7 +51,8 @@ function setupButtons() {
     t.preventDefault() ;
     console.log(t) ;
 		console.log(t.target.childNodes[0].data) ;
-    $(t.target).addClass('room-selected') ;
+//$("[id^=select-room]").removeClass('room-selected') ;
+    //$(t.target).addClass('room-selected') ;
 
 //  $('#send-msg').addClass('hidden') ;
 
@@ -80,7 +81,7 @@ $(document).ready(function() {
 $('#btn-send-msg').click(function() {
 console.log('boom!') ;
    //socket.emit('chat message', {msg: msg, room: $('#r').val() });
-   socket.emit('chat message', {msg: 'Hello world!', room: 'Bar' });
+   socket.emit('chat message', {msg: 'Hello world!', room: 'Lobby' });
 
     }) ;
 

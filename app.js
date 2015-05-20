@@ -49,6 +49,7 @@ console.log(socket) ;
 
   socket.on('chat message', function(msg){
     console.log(msg) ;
+    console.log(msg.room) ;
     io.sockets.in(msg.room).emit('chat message', {msg: msg.msg}) ;
   }) ;
 }) ;
