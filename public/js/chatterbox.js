@@ -3,7 +3,7 @@ var socket ;
 function connect(params) {
   console.log(params) ;
   socket = io.connect('');
-  socket.emit("subscribe", { room: params.room });
+  socket.emit("subscribe", { user: params.user, room: params.room });
 
   socket.on("roomChanged", function(data) {
     console.log("roomChanged", data);
@@ -58,8 +58,9 @@ function setupButtons() {
 
 //  $('#join').click(function() {
      console.log('click join');
-     var u = "steve", //$('#u').val(),
+     var u = $('#username').val(),
          r = "Lobby" ; //$('#r').val() ;
+    console.log(u) ;
      connect({ user: u, room: r} ) ;
 //     $('#send-msg').removeClass('hidden') ;
 //     $('#join-room').addClass('hidden') ;

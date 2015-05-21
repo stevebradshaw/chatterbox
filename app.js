@@ -42,8 +42,8 @@ app.get('/', function (req,res) {
   }) ;
 
 io.sockets.on('connection', function (socket) {
-console.log(socket) ;
-  socket.on('subscribe', function(data) { socket.join(data.room); })
+//console.log(socket) ;
+  socket.on('subscribe', function(data) { console.log(data) ; socket.join(data.room); })
 
   socket.on('unsubscribe', function(data) { socket.leave(data.room); })
 
