@@ -50,7 +50,12 @@ io.sockets.on('connection', function (socket) {
 //console.log(socket) ;
   socket.on('subscribe', function(data) {
     console.log(data) ;
-    socket.join(data.room, function () { console.log('join ok') ; socket.emit('chat message', {msg: 'someone is here...'})}); 
+    socket.join(data.room, function () { 
+      console.log('join ok') ; 
+      io.sockets.in(data.room).emit('chat message', {msg: 'look out....'}) ;
+            io.sockets.in(data.room).emit('room occupants', {msg: roomOccupants }) ;
+      //socket.emit('chat message', {msg: 'someone is here...'})
+    }); 
   })
 
   socket.on('unsubscribe', function(data) { socket.leave(data.room); })

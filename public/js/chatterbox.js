@@ -14,6 +14,11 @@ function connect(params) {
     console.log('received message: ' + msg.msg)
     $('#messages').append($('<li>').text(msg.msg));
   });
+
+  socket.on('room occupants', function(msg) {
+    console.log('update room occupants') ;
+    console.log(msg) ;
+  }) ;
 }
 
 
