@@ -16,6 +16,11 @@ var app = express() ;
 
 app.locals.basedir = __dirname ;
 
+var roomOccupants = [{"room": "Bar", "occupants": ["Alan","Mike", "Chris"]},
+                     {"room": "Lobby", "occupants": ["Jue", "Rich", "Fiona", "Lee"]},
+                     {"room": "Snug", "occupants": ["Dave", "Sian"]}] ;
+
+
 function compile(str, path) {
   return stylus(str)
     .set('filename', path)
@@ -43,7 +48,10 @@ app.get('/', function (req,res) {
 
 io.sockets.on('connection', function (socket) {
 //console.log(socket) ;
-  socket.on('subscribe', function(data) { console.log(data) ; socket.join(data.room); })
+  socket.on('subscribe', function(data) {
+    console.log(data) ;
+    socket.join(data.room, function () { console.log('join ok') ; socket.emit('chat message', {msg: 'someone is here...'})}); 
+  })
 
   socket.on('unsubscribe', function(data) { socket.leave(data.room); })
 

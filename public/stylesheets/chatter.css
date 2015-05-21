@@ -1,8 +1,8 @@
 .jumbotron {
   background-color: #bec;
 }
-.Xroom-selected {
-  background-color: #f00;
+.room-selected {
+  font-weight: bold;
 }
 #messages {
   list-style-type: none;

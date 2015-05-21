@@ -51,8 +51,8 @@ function setupButtons() {
     t.preventDefault() ;
     console.log(t) ;
 		console.log(t.target.childNodes[0].data) ;
-//$("[id^=select-room]").removeClass('room-selected') ;
-    //$(t.target).addClass('room-selected') ;
+$("[id^=select-room]").removeClass('room-selected') ;
+    $(t.target).addClass('room-selected') ;
 
 //  $('#send-msg').addClass('hidden') ;
 
