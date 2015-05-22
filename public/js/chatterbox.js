@@ -30,18 +30,22 @@ function connect(params) {
 
 function populateOccupants(params) {
 
+  var rooms = params.msg ;
+console.log('populateOccupants') ;
+console.log(rooms) ;
   var occupants = "" ;
 
-  for (var i = 0; i < arrayLength; i++) {
-    if (t[i].room == "Lobby") {
+  for (var i = 0; i < rooms.length; i++) {
+console.log(rooms[i].room) ;
+    if (rooms[i].room == "Lobby") {
       
-      var occ = "", o = t[i].occupants ;
-
+      var occ = "", o = rooms[i].occupants ;
+console.log(o) ;
       o.forEach(function(e) {
         console.log(e) ;
         occ = occ + e + ", " ;
       }) ;
-${"#room-occupants"}.innerHTML(occ) ;
+$("#room-occupants").html(occ) ;
     }
   }
  
