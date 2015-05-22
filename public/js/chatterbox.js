@@ -18,11 +18,37 @@ function connect(params) {
   socket.on('room occupants', function(msg) {
     console.log('update room occupants') ;
     console.log(msg) ;
+    populateOccupants(msg) ;
   }) ;
+
+  socket.on('room list', function(msg) {
+    console.log('room list') ;
+    populateRoomList(msg) ;
+  })
 }
 
 
-function populateRoomList() {
+function populateOccupants(params) {
+
+  var occupants = "" ;
+
+  for (var i = 0; i < arrayLength; i++) {
+    if (t[i].room == "Lobby") {
+      
+      var occ = "", o = t[i].occupants ;
+
+      o.forEach(function(e) {
+        console.log(e) ;
+        occ = occ + e + ", " ;
+      }) ;
+${"#room-occupants"}.innerHTML(occ) ;
+    }
+  }
+ 
+
+}
+
+function populateRoomList(params) {
 
 /*
 <a id="selectRoom" href="#" class="list-group-item">Lobby<span class="badge">27</span></a>

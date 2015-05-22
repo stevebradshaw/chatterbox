@@ -20,6 +20,11 @@ var roomOccupants = [{"room": "Bar", "occupants": ["Alan","Mike", "Chris"]},
                      {"room": "Lobby", "occupants": ["Jue", "Rich", "Fiona", "Lee"]},
                      {"room": "Snug", "occupants": ["Dave", "Sian"]}] ;
 
+var roomList = [ {"room": "Auditorium", "count": 123 },
+                 {"room": "Bar", "count": 27 },
+                 {"room": "Lobby", "count": 8 },
+                 {"room": "Snug", "count": 2} ] ;
+
 
 function compile(str, path) {
   return stylus(str)
@@ -54,6 +59,7 @@ io.sockets.on('connection', function (socket) {
       console.log('join ok') ; 
       io.sockets.in(data.room).emit('chat message', {msg: 'look out....'}) ;
             io.sockets.in(data.room).emit('room occupants', {msg: roomOccupants }) ;
+
       //socket.emit('chat message', {msg: 'someone is here...'})
     }); 
   })
