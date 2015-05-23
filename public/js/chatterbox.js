@@ -1,9 +1,11 @@
 var socket ;
 
-function connect(params) {
-  console.log(params) ;
+var selectedRoom = "" ;
+
+function connect() {
+//  console.log(params) ;
   socket = io.connect('');
-  socket.emit("subscribe", { user: params.user, room: params.room });
+ // socket.emit("subscribe", { user: params.user, room: params.room });
 
   socket.on("roomChanged", function(data) {
     console.log("roomChanged", data);
@@ -27,22 +29,32 @@ function connect(params) {
   })
 }
 
+function join(params) {
+  socket.emit("subscribe", { user: params.user, room: params.room });
+  selectedRoom = params.room ;
+}
+
+function leave(params) {
+  console.log('leave room: ' + params.room) ;
+  socket.emit("unsubscribe", { user: params.user, room: params.room });  
+}
+
 
 function populateOccupants(params) {
 
   var rooms = params.msg ;
-console.log('populateOccupants') ;
-console.log(rooms) ;
+console.log('populateOccupants - ' + selectedRoom) ;
+//console.log(rooms) ;
   var occupants = "" ;
 
   for (var i = 0; i < rooms.length; i++) {
 console.log(rooms[i].room) ;
-    if (rooms[i].room == "Lobby") {
+    if (rooms[i].room == selectedRoom) {
       
       var occ = "", o = rooms[i].occupants ;
-console.log(o) ;
+//console.log(o) ;
       o.forEach(function(e) {
-        console.log(e) ;
+//        console.log(e) ;
         occ = occ + e + ", " ;
       }) ;
 $("#room-occupants").html(occ) ;
@@ -53,7 +65,7 @@ $("#room-occupants").html(occ) ;
 }
 
 function populateRoomList(params) {
-
+console.log(params.msg.length) ;
 /*
 <a id="selectRoom" href="#" class="list-group-item">Lobby<span class="badge">27</span></a>
 
@@ -64,9 +76,45 @@ function populateRoomList(params) {
               a(href="#", class="list-group-item") Private 
                 span.badge 2
 */
-	$("#room-select-group").append('<a id="select-room-Bar" href="#" class="list-group-item">Bar<span class="badge">13</span></a>') ;
-	$("#room-select-group").append('<a id="select-room-Lobby" href="#" class="list-group-item">Lobby<span class="badge">27</span></a>') ;
-	$("#room-select-group").append('<a id="select-room-Snug" href="#" class="list-group-item">Snug<span class="badge">4</span></a>') ;
+
+  var r, c ;
+  $("#room-select-group").html('') ;
+  for (var i=0 ; i < params.msg.length ; i++) {
+    r = params.msg[i].room ;
+    c = params.msg[i].count ;
+    $("#room-select-group").append('<a id="select-room-' + r + '" href="#" class="list-group-item">' + r + '<span class="badge">' + c + '</span></a>') ;
+  }
+	//$("#room-select-group").append('<a id="select-room-Bar" href="#" class="list-group-item">Bar<span class="badge">13</span></a>') ;
+	//$("#room-select-group").append('<a id="select-room-Lobby" href="#" class="list-group-item">Lobby<span class="badge">27</span></a>') ;
+	//$("#room-select-group").append('<a id="select-room-Snug" href="#" class="list-group-item">Snug<span class="badge">4</span></a>') ;
+
+
+  $("[id^=select-room]").click(function(t) {
+    t.preventDefault() ;
+    console.log(t) ;
+    console.log(t.target.childNodes[0].data) ;
+$("[id^=select-room]").removeClass('room-selected') ;
+    $(t.target).addClass('room-selected') ;
+
+//  $('#send-msg').addClass('hidden') ;
+
+//  $('#join').click(function() {
+     console.log('click join');
+     var u = $('#username').val(),
+         r = t.target.childNodes[0].data ; //"Lobby" ; //$('#r').val() ;
+    console.log(u) ;
+    console.log(r) ;
+
+    if (selectedRoom !== "")
+      leave({user: u, room: selectedRoom}) ;
+
+    join({user: u, room: r}) ;
+//     connect({ user: u, room: r} ) ;
+//     $('#send-msg').removeClass('hidden') ;
+//     $('#join-room').addClass('hidden') ;
+//  }) ;
+
+  }) ;
 }
 
 function populateRoomOccupants() {
@@ -82,26 +130,7 @@ function setupButtons() {
 		console.log('create room') ;
 	}) ;
 
-	$("[id^=select-room]").click(function(t) {
-    t.preventDefault() ;
-    console.log(t) ;
-		console.log(t.target.childNodes[0].data) ;
-$("[id^=select-room]").removeClass('room-selected') ;
-    $(t.target).addClass('room-selected') ;
 
-//  $('#send-msg').addClass('hidden') ;
-
-//  $('#join').click(function() {
-     console.log('click join');
-     var u = $('#username').val(),
-         r = "Lobby" ; //$('#r').val() ;
-    console.log(u) ;
-     connect({ user: u, room: r} ) ;
-//     $('#send-msg').removeClass('hidden') ;
-//     $('#join-room').addClass('hidden') ;
-//  }) ;
-
-	}) ;
 }
 
 
@@ -109,15 +138,17 @@ $(document).ready(function() {
 
 	console.log('document ready') ;
 
-	populateRoomList() ;
+	//populateRoomList() ;
 
 	setupButtons() ;
+
+  connect() ;
 
 	//$('form').submit(function(){
 $('#btn-send-msg').click(function() {
 console.log('boom!') ;
    //socket.emit('chat message', {msg: msg, room: $('#r').val() });
-   socket.emit('chat message', {msg: 'Hello world!', room: 'Lobby' });
+   socket.emit('chat message', {msg: 'Hello world!', room: selectedRoom });
 
     }) ;
 

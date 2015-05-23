@@ -16,7 +16,8 @@ var app = express() ;
 
 app.locals.basedir = __dirname ;
 
-var roomOccupants = [{"room": "Bar", "occupants": ["Alan","Mike", "Chris"]},
+var roomOccupants = [{"room": "Auditorium", "occupants": ["Tom","Dick", "Harriet", "Ed"]},
+                     {"room": "Bar", "occupants": ["Alan","Mike", "Chris"]},
                      {"room": "Lobby", "occupants": ["Jue", "Rich", "Fiona", "Lee"]},
                      {"room": "Snug", "occupants": ["Dave", "Sian"]}] ;
 
@@ -71,6 +72,8 @@ io.sockets.on('connection', function (socket) {
     console.log(msg.room) ;
     io.sockets.in(msg.room).emit('chat message', {msg: msg.msg}) ;
   }) ;
+
+  socket.emit('room list', {msg: roomList}) ;
 }) ;
 
 //app.listen(appinfo.port, function () {
