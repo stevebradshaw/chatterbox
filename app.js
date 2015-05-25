@@ -59,7 +59,7 @@ io.sockets.on('connection', function (socket) {
     socket.join(data.room, function () { 
       console.log('join ok') ; 
       console.log(data.user) ;
-      io.sockets.in(data.room).emit('chat message', {msg: data.user + ' as entered the room'}) ;
+      io.sockets.in(data.room).emit('chat message', {msg: data.user + ' has entered the room'}) ;
       io.sockets.in(data.room).emit('room occupants', {msg: roomOccupants }) ;
 
       //socket.emit('chat message', {msg: 'someone is here...'})
@@ -72,7 +72,7 @@ io.sockets.on('connection', function (socket) {
     io.sockets.in(msg.room).emit('chat message', {msg: msg.msg}) ;
   }) ;
 
-  socket.emit('room list', {msg: roomList}) ;
+  socket.emit('room list', {msg: roomOccupants}) ;
 }) ;
 
 //app.listen(appinfo.port, function () {

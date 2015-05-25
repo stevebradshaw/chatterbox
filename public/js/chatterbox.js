@@ -1,6 +1,6 @@
 var socket ;
 
-var selectedRoom = "" ;
+var selectedRoom = "",username = "" ;
 
 function connect() {
 
@@ -42,7 +42,8 @@ function populateOccupants(params) {
     if (rooms[i].room == selectedRoom) {
       
       var occ = "", o = rooms[i].occupants ;
-
+      $('a#select-room-' + selectedRoom + ' > span').html(o.length) ;
+console.log(o.length) ;
       o.forEach(function(e) {
         occ = occ + e + ", " ;
       }) ;
@@ -54,13 +55,14 @@ function populateOccupants(params) {
 
 function populateRoomList(params) {
 
-  var r, c ;
+  var r, c, o ;
 
   $("#room-select-group").html('') ;
 
   for (var i=0 ; i < params.msg.length ; i++) {
     r = params.msg[i].room ;
-    c = params.msg[i].count ;
+    o = params.msg[i].occupants
+    c = o.length ;
     $("#room-select-group").append('<a id="select-room-' + r + '" href="#" class="list-group-item">' + r + '<span class="badge">' + c + '</span></a>') ;
   }
 
@@ -70,17 +72,22 @@ function populateRoomList(params) {
     $("[id^=select-room]").removeClass('room-selected') ;
     $(t.target).addClass('room-selected') ;
 
-    var u = $('#username').val(),
-        r = t.target.childNodes[0].data ;
+    username = $('#username').val() ;
 
-    if (u=="") 
-      u = "anonymous" ;
+    var r = t.target.childNodes[0].data ;
 
-console.log('u = ' + u) ;
+    if (username == "") 
+      username = "anonymous" ;
+
+console.log('u = ' + username) ;
     if (selectedRoom !== "")
-      leave({user: u, room: selectedRoom}) ;
+      leave({user: username, room: selectedRoom}) ;
 
-    join({user: u, room: r}) ;
+    join({user: username, room: r}) ;
+
+    $('#message').removeAttr('disabled');
+    $('#btn-send-msg').removeAttr('disabled');
+    $('#username').attr('disabled','disabled');
 
   }) ;
 }
@@ -91,6 +98,13 @@ function setupButtons() {
 		console.log('create room') ;
 	}) ;
 
+  $('#btn-send-msg').click(function() {
+    console.log($('#message').val()) ;
+    socket.emit('chat message', {msg: "{" + username + "} " + $('#message').val(), room: selectedRoom });
+  }) ;
+
+  $('#message').attr('disabled','disabled');
+  $('#btn-send-msg').attr('disabled','disabled');
 }
 
 $(document).ready(function() {
@@ -98,9 +112,5 @@ $(document).ready(function() {
 	setupButtons() ;
 
   connect() ;
-
-  $('#btn-send-msg').click(function() {
-    socket.emit('chat message', {msg: 'Hello world!', room: selectedRoom });
-  }) ;
 
 }) ;
