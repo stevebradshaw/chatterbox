@@ -16,6 +16,7 @@ function connect() {
 
   socket.on('room occupants', function(msg) {
     populateOccupants(msg) ;
+      populateRoomList(msg) ;
   }) ;
 
   socket.on('room list', function(msg) {
@@ -41,14 +42,15 @@ function populateOccupants(params) {
 
     if (rooms[i].room == selectedRoom) {
       
-      var occ = "", o = rooms[i].occupants ;
+      var occ = "", o = rooms[i].occupants.sort() ;
       $('a#select-room-' + selectedRoom + ' > span').html(o.length) ;
 console.log(o.length) ;
       o.forEach(function(e) {
         occ = occ + e + ", " ;
       }) ;
 
-      $("#room-occupants").html(occ) ;
+      //$("#room-occupants").html(occ) ;
+      $("#room-occupants").html(o.toString().replace(/,/g, ", ")) ;
     }
   }
 }

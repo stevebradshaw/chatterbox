@@ -1,4 +1,4 @@
-var appinfo = { port: 3000} ;
+var appinfo = { port: 3000 } ;
 
 var express = require('express')
   , stylus = require('stylus')
@@ -9,8 +9,8 @@ var express = require('express')
 var app = express() ;
 
 //var server = http.createServer(app) ;
- var http = require('http').Server(app);
- var io = require('socket.io')(http);
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
 
 //var io = require('socket.io').listen(server) ;
 
@@ -21,10 +21,10 @@ var roomOccupants = [{"room": "Auditorium", "occupants": ["Tom","Dick", "Harriet
                      {"room": "Lobby", "occupants": ["Jue", "Rich", "Fiona", "Lee"]},
                      {"room": "Snug", "occupants": ["Dave", "Sian"]}] ;
 
-var roomList = [ {"room": "Auditorium", "count": 123 },
+/*var roomList = [ {"room": "Auditorium", "count": 123 },
                  {"room": "Bar", "count": 27 },
                  {"room": "Lobby", "count": 8 },
-                 {"room": "Snug", "count": 2} ] ;
+                 {"room": "Snug", "count": 2} ] ;*/
 
 
 function compile(str, path) {
@@ -59,14 +59,47 @@ io.sockets.on('connection', function (socket) {
     socket.join(data.room, function () { 
       console.log('join ok') ; 
       console.log(data.user) ;
+
+
+  for (var i = 0; i < roomOccupants.length; i++) {
+
+    if (roomOccupants[i].room == data.room) {
+      roomOccupants[i].occupants.push(data.user) ;
+    }
+  }
+      
+
       io.sockets.in(data.room).emit('chat message', {msg: data.user + ' has entered the room'}) ;
       io.sockets.in(data.room).emit('room occupants', {msg: roomOccupants }) ;
+
+
 
       //socket.emit('chat message', {msg: 'someone is here...'})
     }); 
   })
 
-  socket.on('unsubscribe', function(data) { socket.leave(data.room); })
+  socket.on('unsubscribe', function(data) {
+    socket.leave(data.room); 
+
+    for (var i = 0; i < roomOccupants.length; i++) {
+
+      if (roomOccupants[i].room == data.room) {
+        
+//        roomOccupants[i].occupants.push(data.user) ;
+
+        for(var j = roomOccupants[i].occupants.length - 1; j >= 0; j--) {
+          if(roomOccupants[i].occupants[j] === data.user) {
+            roomOccupants[i].occupants.splice(j, 1);
+          }
+        }
+      }
+    } 
+  })
+
+  socket.on('disconnect', function(data) {
+    console.log('disconnect detected') ;
+    console.log(data) ;
+  })
 
   socket.on('chat message', function(msg){
     io.sockets.in(msg.room).emit('chat message', {msg: msg.msg}) ;
