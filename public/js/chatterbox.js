@@ -6,9 +6,9 @@ function connect() {
 
   socket = io.connect('');
 
-  socket.on("roomChanged", function(data) {
+/*  socket.on("roomChanged", function(data) {
     socket.emit('chat message', {msg: '... has joined the room', room: $('#r').val()}) ;
-  });
+  });*/
 
   socket.on('chat message', function(msg){
     $('#messages').append($('<li>').text(msg.msg));
@@ -67,6 +67,8 @@ function populateRoomList(params) {
     c = o.length ;
     $("#room-select-group").append('<a id="select-room-' + r + '" href="#" class="list-group-item">' + r + '<span class="badge">' + c + '</span></a>') ;
   }
+
+  $('#select-room-' + selectedRoom).addClass('room-selected') ;
 
   $("[id^=select-room]").click(function(t) {
     t.preventDefault() ;
