@@ -44,12 +44,10 @@ function populateOccupants(params) {
       
       var occ = "", o = rooms[i].occupants.sort() ;
       $('a#select-room-' + selectedRoom + ' > span').html(o.length) ;
-console.log(o.length) ;
       o.forEach(function(e) {
         occ = occ + e + ", " ;
       }) ;
 
-      //$("#room-occupants").html(occ) ;
       $("#room-occupants").html(o.toString().replace(/,/g, ", ")) ;
     }
   }
@@ -83,7 +81,6 @@ function populateRoomList(params) {
     if (username == "") 
       username = "anonymous" ;
 
-console.log('u = ' + username) ;
     if (selectedRoom !== "")
       leave({user: username, room: selectedRoom}) ;
 
@@ -103,7 +100,6 @@ function setupButtons() {
 	}) ;
 
   $('#btn-send-msg').click(function() {
-    console.log($('#message').val()) ;
     socket.emit('chat message', {msg: "{" + username + "} " + $('#message').val(), room: selectedRoom });
   }) ;
 
@@ -112,9 +108,6 @@ function setupButtons() {
 }
 
 $(document).ready(function() {
-
 	setupButtons() ;
-
   connect() ;
-
 }) ;

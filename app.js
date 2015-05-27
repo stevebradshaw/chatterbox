@@ -1,18 +1,13 @@
-var appinfo = { port: 3000 } ;
-
-var express = require('express')
+var appinfo = { port: 3000 }
+  , express = require('express')
   , stylus = require('stylus')
   , nib = require('nib')
   , logger = require('morgan') ;
-//  , http = require('http') ;
 
 var app = express() ;
 
-//var server = http.createServer(app) ;
-var http = require('http').Server(app);
-var io = require('socket.io')(http);
-
-//var io = require('socket.io').listen(server) ;
+var http = require('http').Server(app),
+    io   = require('socket.io')(http);
 
 app.locals.basedir = __dirname ;
 
@@ -21,32 +16,28 @@ var roomOccupants = [{"room": "Auditorium", "occupants": [], "ids": []},
                      {"room": "Lobby", "occupants": [], "ids": []},
                      {"room": "Snug", "occupants": [], "ids": []}] ;
 
-/*var roomList = [ {"room": "Auditorium", "count": 123 },
-                 {"room": "Bar", "count": 27 },
-                 {"room": "Lobby", "count": 8 },
-                 {"room": "Snug", "count": 2} ] ;*/
-
-
 function removeOccupant(params) {
-  console.log(params) ;
-      for (var i = 0; i < roomOccupants.length; i++) {
-console.log(i) ;
-console.log(params.room) ;
-      if ((roomOccupants[i].room == params.room) || (typeof params.room === 'undefined')) {
 
-//        roomOccupants[i].occupants.push(data.user) ;
-
-        for(var j = roomOccupants[i].occupants.length - 1; j >= 0; j--) {
-          if(roomOccupants[i].ids[j] == params.id) {
-//          if(roomOccupants[i].occupants[j] === data.user) {
-            roomOccupants[i].occupants.splice(j, 1);
-            roomOccupants[i].ids.splice(j, 1);
-          }
+  for (var i = 0; i < roomOccupants.length; i++) {
+    if ((roomOccupants[i].room == params.room) || (typeof params.room === 'undefined')) {
+      for(var j = roomOccupants[i].occupants.length - 1; j >= 0; j--) {
+        if(roomOccupants[i].ids[j] == params.id) {
+          roomOccupants[i].occupants.splice(j, 1);
+          roomOccupants[i].ids.splice(j, 1);
         }
       }
-    } 
+    }
+  }
 
-    console.log(roomOccupants) ;
+}
+
+function addOccupant(params) {
+  for (var i = 0; i < roomOccupants.length; i++) {
+    if (roomOccupants[i].room == params.room) {
+      roomOccupants[i].occupants.push(params.user) ;
+      roomOccupants[i].ids.push(params.id) ;      
+    }
+  }
 }
 
 function compile(str, path) {
@@ -75,61 +66,22 @@ app.get('/', function (req,res) {
   }) ;
 
 io.sockets.on('connection', function (socket) {
-//console.log(socket) ;
+
   socket.on('subscribe', function(data) {
-    console.log(data) ;
+
     socket.join(data.room, function () { 
-      console.log('join ok') ; 
-      console.log(data.user) ;
-
-
-  for (var i = 0; i < roomOccupants.length; i++) {
-console.log(i) ;
-console.log(data.room) ;
-    if (roomOccupants[i].room == data.room) {
-      roomOccupants[i].occupants.push(data.user) ;
-      roomOccupants[i].ids.push(socket.id) ;      
-    }
-  }
-      
-      console.log(roomOccupants) ;
-
+      addOccupant({room: data.room, user: data.user, id: socket.id}) ;    
       io.sockets.in(data.room).emit('chat message', {msg: data.user + ' has entered the room ' + data.room}) ;
       io.sockets.in(data.room).emit('room occupants', {msg: roomOccupants }) ;
-
-
-
-      //socket.emit('chat message', {msg: 'someone is here...'})
     }); 
   })
 
   socket.on('unsubscribe', function(data) {
     socket.leave(data.room); 
-
-removeOccupant({id: socket.id, room: data.room}) ;
-  /*  for (var i = 0; i < roomOccupants.length; i++) {
-
-      if (roomOccupants[i].room == data.room) {
-
-//        roomOccupants[i].occupants.push(data.user) ;
-
-        for(var j = roomOccupants[i].occupants.length - 1; j >= 0; j--) {
-          if(roomOccupants[i].ids[j] === socket.id) {
-//          if(roomOccupants[i].occupants[j] === data.user) {
-            roomOccupants[i].occupants.splice(j, 1);
-            roomOccupants[i].ids.splice(j, 1);
-          }
-        }
-      }
-    } 
-
-    console.log(roomOccupants) ;*/
+    removeOccupant({id: socket.id, room: data.room}) ;
   })
 
   socket.on('disconnect', function(data) {
-    console.log('disconnect detected') ;
-    console.log(data) ;
-    console.log(socket.id) ;
     removeOccupant({id: socket.id, room: data.room}) ;
   })
 
@@ -140,17 +92,6 @@ removeOccupant({id: socket.id, room: data.room}) ;
   socket.emit('room list', {msg: roomOccupants}) ;
 }) ;
 
-//app.listen(appinfo.port, function () {
-//  console.log('Listening on port ' + appinfo.port) ;
-//})
-
 http.listen(appinfo.port, function(){
   console.log('listening on *:3000');
 }) ;
-
-//io.on('connection', function (socket) {
-//      socket.emit('news', { hello: 'world' });
-//        socket.on('my other event', function (data) {
-//                console.log(data);
-//                  });
-//});
