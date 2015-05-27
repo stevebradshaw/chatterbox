@@ -7,9 +7,7 @@ html
 
     script( type="text/javascript", src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js" )
     script( type="text/javascript", src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js" )
-    script( type="text/javascript", src="http://cdn.socket.io/socket.io-1.2.0.js")
-
-
+    script( type="text/javascript", src="https://cdn.socket.io/socket.io-1.2.0.js")
     script( type="text/javascript", src="js/chatterbox.js" )
   body
 
@@ -27,6 +25,12 @@ html
         
           br
 
+          #room-select
+            label Room Selector
+            #room-select-group.list-group
+
+          br
+
           #message-window
             label(for="message") Message
             textarea#message.form-control(rows="3", placeholder="Message")
@@ -34,14 +38,6 @@ html
             button#btn-send-msg.btn.btn-sm.btn-success Send
             
           br
-
-          #room-select
-            label Room Selector
-            #room-select-group.list-group
-
-            br
-
-            button#btn-new-room.btn.btn-sm.btn-success New Room
 
         .col-sm-7
           #messages
