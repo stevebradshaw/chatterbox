@@ -91,12 +91,9 @@ function populateRoomList(params) {
 
 function setupButtons() {
 
-	$("#btn-new-room").click(function() {
-		console.log('create room') ;
-	}) ;
-
   $('#btn-send-msg').click(function() {
     socket.emit('chat message', {msg: "{" + username + "} " + $('#message').val(), room: selectedRoom });
+    $('#message').val('') ;
   }) ;
 
   $('#message').attr('disabled','disabled');
