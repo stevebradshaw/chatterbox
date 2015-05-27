@@ -6,10 +6,6 @@ function connect() {
 
   socket = io.connect('');
 
-/*  socket.on("roomChanged", function(data) {
-    socket.emit('chat message', {msg: '... has joined the room', room: $('#r').val()}) ;
-  });*/
-
   socket.on('chat message', function(msg){
     $('#messages').append($('<li>').text(msg.msg));
   });
