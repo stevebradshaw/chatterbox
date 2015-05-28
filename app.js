@@ -2,7 +2,8 @@ var appinfo = { port: 3000 }
   , express = require('express')
   , stylus = require('stylus')
   , nib = require('nib')
-  , logger = require('morgan') ;
+  , logger = require('morgan')
+  , async = require('async') ;
 
 var occupants = require('./modules/occupants') ;
 
@@ -38,24 +39,29 @@ app.get('/', function (req,res) {
      )
   }) ;
 
+
+
 io.sockets.on('connection', function (socket) {
 
   socket.on('subscribe', function(data) {
 
     socket.join(data.room, function () { 
       occupants.add({room: data.room, user: data.user, id: socket.id}) ;      
-      io.sockets.in(data.room).emit('chat message', {msg: data.user + ' has entered the room ' + data.room}) ;
+      io.sockets.in(data.room).emit('chat message', {msg: data.user + ' has entered the ' + data.room}) ;
       io.sockets.in(data.room).emit('room occupants', {msg: occupants.get() }) ;
+      io.sockets.emit('room list', { msg: occupants.get() });
     }); 
   })
 
   socket.on('unsubscribe', function(data) {
     socket.leave(data.room); 
     occupants.remove({id: socket.id, room: data.room}) ;
+    io.sockets.emit('room list', {msg: occupants.get() });
   })
 
   socket.on('disconnect', function(data) {
     occupants.remove({id: socket.id, room: data.room}) ;    
+    io.sockets.emit('room list', {msg: occupants.get() });
   })
 
   socket.on('chat message', function(msg){
