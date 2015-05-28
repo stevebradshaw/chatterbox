@@ -3,9 +3,8 @@ var appinfo = { port: 3000 }
   , stylus = require('stylus')
   , nib = require('nib')
   , logger = require('morgan')
-  , async = require('async') ;
-
-var occupants = require('./modules/occupants') ;
+  , async = require('async')
+  , occupants = require('./modules/occupants') ;
 
 var app = express() ;
 
@@ -38,8 +37,6 @@ app.get('/', function (req,res) {
        { title : 'Chatter Box' }
      )
   }) ;
-
-
 
 io.sockets.on('connection', function (socket) {
 
